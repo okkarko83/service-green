@@ -1,0 +1,36 @@
+# values.yaml
+replicaCount: 1
+containerPort: 5000
+
+image:
+  repository: ghcr.io/okkarko83/service-green
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+
+fullnameOverride: "poc-svc-green"
+
+
+env:
+  PEER_SERVICES: "blue:http://poc-svc-blue,yellow:http://poc-svc-yellow"
+
+service:
+  type: ClusterIP
+  ports: 
+    - name: http
+      port: 80
+      targetPort: 5000
+      protocol: TCP
+
+istio:
+  enabled: true
+  gatewayName: "argocd-gateway"
+  host: "green.local"
+
+resources:
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+  requests:
+    cpu: "200m"
+    memory: "256Mi"
